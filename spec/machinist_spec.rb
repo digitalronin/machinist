@@ -9,6 +9,7 @@ class Base
   
   def saved?;    @saved;    end
   def reloaded?; @reloaded; end
+  def new_record?; !@saved; end
 end
 
 class Post < Base
@@ -38,7 +39,7 @@ describe Machinist do
     before do
       @post = Post.make
     end
-    
+
     it "should set a field from a constant in the blueprint" do
       @post.title.should == "An Example Post"
     end
@@ -53,6 +54,16 @@ describe Machinist do
     
     it "should reload the object" do
       @post.should be_reloaded
+    end
+  end
+
+  describe "instantiating but not saving" do
+    before do
+      @post = Post.make_new
+    end
+
+    it "should be a new record" do
+      @post.new_record?.should be_true
     end
   end
   

@@ -11,12 +11,18 @@ module Machinist
     end
   
     def make(attributes = {})
+      obj = make_new(attributes)
+      obj.save && obj.reload
+      obj
+    end
+
+    def make_new(attributes = {})
       raise "No blueprint for class #{self}" if @blueprint.nil?
       lathe = Lathe.new(self.new, attributes)
       lathe.instance_eval(&@blueprint)
-      lathe.object.save && lathe.object.reload
       lathe.object
     end
+
   end
   
   class Lathe
