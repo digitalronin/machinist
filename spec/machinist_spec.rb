@@ -4,7 +4,7 @@ require 'machinist'
 class Base
   include Machinist
   
-  def save!;  @saved = true;    true; end
+  def save;  @saved = true;    true; end
   def reload; @reloaded = true; self; end
   
   def saved?;    @saved;    end
@@ -59,6 +59,11 @@ describe Machinist do
   it "should overrid a field from the blueprint with a parameter" do
     post = Post.make(:title => "A Different Title")
     post.title.should == "A Different Title"
+  end
+  
+  it "should override a field from the blueprint with nil" do
+    post = Post.make(:title => nil)
+    post.title.should be_nil
   end
   
   it "should create an associated object for a field with no arguments in the blueprint" do
