@@ -4,7 +4,7 @@ require 'machinist'
 class Base
   include Machinist
   
-  def save;  @saved = true;    true; end
+  def save!;  @saved = true;    true; end
   def reload; @reloaded = true; self; end
   
   def saved?;    @saved;    end
@@ -57,16 +57,6 @@ describe Machinist do
     end
   end
 
-  describe "instantiating but not saving" do
-    before do
-      @post = Post.make_new
-    end
-
-    it "should be a new record" do
-      @post.new_record?.should be_true
-    end
-  end
-  
   it "should overrid a field from the blueprint with a parameter" do
     post = Post.make(:title => "A Different Title")
     post.title.should == "A Different Title"

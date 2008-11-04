@@ -11,16 +11,25 @@ module Machinist
     end
   
     def make(attributes = {})
-      obj = make_new(attributes)
-      obj.save && obj.reload
-      obj
+      lathe = make_lathe attributes
+      lathe.object.save!
+      returning(lathe.object.reload) do |object|
+        yield object if block_given?
+      end
     end
 
-    def make_new(attributes = {})
+    def make_params(attributes = {})
+      lathe = make_lathe attributes
+      lathe.object.attributes
+    end
+
+    private
+
+    def make_lathe(attributes = {})
       raise "No blueprint for class #{self}" if @blueprint.nil?
       lathe = Lathe.new(self.new, attributes)
       lathe.instance_eval(&@blueprint)
-      lathe.object
+      lathe
     end
 
   end
